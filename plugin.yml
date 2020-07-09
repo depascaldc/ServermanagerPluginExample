@@ -1,0 +1,6 @@
+name: ExamplePlugin
+author: depascaldc
+main: de.depascaldc.mgmt.exampleplugin.ExamplePlugin
+website: https://github.com/depascaldc/MinecraftServermanager
+version: 1.0.0
+api: ["1.0"]
