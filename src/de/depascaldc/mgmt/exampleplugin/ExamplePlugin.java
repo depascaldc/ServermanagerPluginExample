@@ -27,6 +27,8 @@
  */
 package de.depascaldc.mgmt.exampleplugin;
 
+import java.io.File;
+
 import de.depascaldc.management.config.Config;
 import de.depascaldc.management.logger.ConsoleColors;
 import de.depascaldc.management.main.ServerManager;
@@ -41,7 +43,7 @@ public class ExamplePlugin extends JavaPlugin {
 	}
 	
 	private Config pluginConfig;
-	
+	private Config otherConfig;
 	@Override
 	public void onLoad() {
 		instance = this;
@@ -49,10 +51,17 @@ public class ExamplePlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		
 		saveDefaultConfig(); 
 		reloadConfig();
+		
+		saveResource("otherConfig.yml", /*overwrite*/ true);
+		
+		otherConfig = new Config(new File(this.getDataFolder(), "otherConfig.yml"), Config.YAML);
 		pluginConfig = getConfig();
+		
 		ServerManager.getCommandMap().register(new ExampleCommand(this, "example"));
+		
 		getLogger().info(ConsoleColors.CYAN_UNDERLINED + "Plugin nice geladen diggi XD");
 	}
 	
@@ -63,6 +72,10 @@ public class ExamplePlugin extends JavaPlugin {
 	
 	public Config getPluginConfig() {
 		return pluginConfig;
+	}
+	
+	public Config getOtherConfig() {
+		return otherConfig;
 	}
 
 }
