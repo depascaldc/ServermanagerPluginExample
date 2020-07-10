@@ -27,18 +27,42 @@
  */
 package de.depascaldc.mgmt.exampleplugin;
 
+import de.depascaldc.management.config.Config;
 import de.depascaldc.management.logger.ConsoleColors;
 import de.depascaldc.management.main.ServerManager;
 import de.depascaldc.management.plugins.JavaPlugin;
 
 public class ExamplePlugin extends JavaPlugin {
-
+	
+	private static ExamplePlugin instance;
+	
+	public static ExamplePlugin getInstance() {
+		return instance;
+	}
+	
+	private Config pluginConfig;
+	
+	@Override
+	public void onLoad() {
+		instance = this;
+	}
+	
 	@Override
 	public void onEnable() {
 		saveDefaultConfig(); 
 		reloadConfig();
+		pluginConfig = getConfig();
 		ServerManager.getCommandMap().register(new ExampleCommand(this, "example"));
 		getLogger().info(ConsoleColors.CYAN_UNDERLINED + "Plugin nice geladen diggi XD");
+	}
+	
+	@Override
+	public void onDisable() {
+		getLogger().info(ConsoleColors.RED_UNDERLINED + "Plugin nice entladen diggi XD");
+	}
+	
+	public Config getPluginConfig() {
+		return pluginConfig;
 	}
 
 }

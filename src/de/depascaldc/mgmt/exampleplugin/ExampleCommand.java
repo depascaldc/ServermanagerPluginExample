@@ -30,6 +30,7 @@ package de.depascaldc.mgmt.exampleplugin;
 import java.io.IOException;
 
 import de.depascaldc.management.commands.ConsoleCommand;
+import de.depascaldc.management.config.Config;
 import de.depascaldc.management.main.ServerManager;
 import de.depascaldc.management.plugins.Plugin;
 import de.depascaldc.management.process.ManagedProcess;
@@ -50,16 +51,21 @@ public class ExampleCommand extends ConsoleCommand {
 	public boolean executeCommand(String commandLabel, String[] args) {
 		plugin.getLogger().info("Example Command answer.");
 
-		ManagedProcess managedProcess = ServerManager.getManagedProcess();
-		boolean managedProcessActive = managedProcess != null
-				&& managedProcess.getProcess() != null;
-		String mgmtProc = managedProcessActive ? "ManagedProcess has active ServerProcess" : "ManagedProcess has NO active ServerProcess";
-		plugin.getLogger().info(mgmtProc);
+		Config c = ExamplePlugin.getInstance().getPluginConfig();
+		c.getSection("section").getKeys().forEach(key -> {
+			plugin.getLogger().info(key.toUpperCase() + ": " + c.getSection("section").getString(key));
+		});
 		
-		if(args.length > 0) {
+		ManagedProcess managedProcess = ServerManager.getManagedProcess();
+		boolean managedProcessActive = managedProcess != null && managedProcess.getProcess() != null;
+		String mgmtProc = managedProcessActive ? "ManagedProcess has active ServerProcess"
+				: "ManagedProcess has NO active ServerProcess";
+		plugin.getLogger().info(mgmtProc);
+
+		if (args.length > 0) {
 			switch (args[0].toLowerCase()) {
 			case "restart":
-				if(managedProcessActive) {
+				if (managedProcessActive) {
 					managedProcess.stopProcess();
 					while (managedProcess.getProcess() != null) {
 						try {
